@@ -1,17 +1,117 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Calibration">
+      <UniqueIdentifier>{4a067d5e-7703-4578-8bf8-26b957825ec6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="CameraModel">
+      <UniqueIdentifier>{d42180e8-c0f5-4f62-90e9-ed982bfaf77c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8625af08-0be6-48fa-9012-a03bb5118a89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImageProcessing">
+      <UniqueIdentifier>{d028f821-a136-447e-93e6-b1a8f1d381eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Reconstruction">
+      <UniqueIdentifier>{0b3e11a4-573e-44b0-9e3e-a2329dea4196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageProcessing\Chessboard">
+      <UniqueIdentifier>{7e394427-af52-4a81-9362-901f41c5eaef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CameraModel\DistortionModel">
+      <UniqueIdentifier>{f7d63edc-19c6-43e6-94e1-bf3e42a9c98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CameraModel\ProjectionModel">
+      <UniqueIdentifier>{d91b5d52-03c9-4bb7-b40e-d68786e990ae}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Reconstruction\HomographyCalculation.cpp">
+      <Filter>Reconstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Reconstruction\ModelViewFromHomography.cpp">
+      <Filter>Reconstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Reconstruction\ReconstructionError.cpp">
+      <Filter>Reconstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessing\Chessboard\ChessboardCornerDetector.cpp">
+      <Filter>ImageProcessing\Chessboard</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessing\Chessboard\ChessboardSegmentation.cpp">
+      <Filter>ImageProcessing\Chessboard</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\EigenHelpers.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Match.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibration\IntrinsicCameraCalibration.cpp">
+      <Filter>Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\CameraModel.cpp">
+      <Filter>CameraModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\EquidistantModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\PinholeModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\ProjectionModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\DistortionModel\BrownModel.cpp">
+      <Filter>CameraModel\DistortionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\DistortionModel\DistortionModel.cpp">
+      <Filter>CameraModel\DistortionModel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Reconstruction\HomographyCalculation.h">
+      <Filter>Reconstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Reconstruction\ModelViewFromHomography.h">
+      <Filter>Reconstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Reconstruction\ReconstructionError.h">
+      <Filter>Reconstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessing\Chessboard\ChessboardCornerDetector.h">
+      <Filter>ImageProcessing\Chessboard</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessing\Chessboard\ChessboardSegmentation.h">
+      <Filter>ImageProcessing\Chessboard</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EigenHelpers.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Match.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibration\IntrinsicCameraCalibration.h">
+      <Filter>Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\CameraModel.h">
+      <Filter>CameraModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\EquidistantModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\PinholeModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\ProjectionModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\DistortionModel\BrownModel.h">
+      <Filter>CameraModel\DistortionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\DistortionModel\DistortionModel.h">
+      <Filter>CameraModel\DistortionModel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

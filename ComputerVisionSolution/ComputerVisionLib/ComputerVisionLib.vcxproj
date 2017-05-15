@@ -25,26 +25,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -74,6 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..;D:\Libs\Eigen_3.3.3;D:\Libs\OpenCV_3.2.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -81,7 +82,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..;D:\Libs\Eigen_3.3.3;D:\Libs\OpenCV_3.2.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>D:\Libs\OpenCV_3.2.0\opencv\build\x64\vc14\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -90,6 +95,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..;D:\Libs\Eigen_3.3.3;D:\Libs\OpenCV_3.2.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -103,13 +109,47 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..;D:\Libs\Eigen_3.3.3;D:\Libs\OpenCV_3.2.0\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>D:\Libs\OpenCV_3.2.0\opencv\build\x64\vc14\lib</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Calibration\IntrinsicCameraCalibration.cpp" />
+    <ClCompile Include="CameraModel\CameraModel.cpp" />
+    <ClCompile Include="CameraModel\DistortionModel\BrownModel.cpp" />
+    <ClCompile Include="CameraModel\DistortionModel\DistortionModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\EquidistantModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\PinholeModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\ProjectionModel.cpp" />
+    <ClCompile Include="Common\EigenHelpers.cpp" />
+    <ClCompile Include="Common\Match.cpp" />
+    <ClCompile Include="ImageProcessing\Chessboard\ChessboardCornerDetector.cpp" />
+    <ClCompile Include="ImageProcessing\Chessboard\ChessboardSegmentation.cpp" />
+    <ClCompile Include="Reconstruction\HomographyCalculation.cpp" />
+    <ClCompile Include="Reconstruction\ModelViewFromHomography.cpp" />
+    <ClCompile Include="Reconstruction\ReconstructionError.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Calibration\IntrinsicCameraCalibration.h" />
+    <ClInclude Include="CameraModel\CameraModel.h" />
+    <ClInclude Include="CameraModel\DistortionModel\BrownModel.h" />
+    <ClInclude Include="CameraModel\DistortionModel\DistortionModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\EquidistantModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\PinholeModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\ProjectionModel.h" />
+    <ClInclude Include="Common\EigenHelpers.h" />
+    <ClInclude Include="Common\Match.h" />
+    <ClInclude Include="ImageProcessing\Chessboard\ChessboardCornerDetector.h" />
+    <ClInclude Include="ImageProcessing\Chessboard\ChessboardSegmentation.h" />
+    <ClInclude Include="Reconstruction\HomographyCalculation.h" />
+    <ClInclude Include="Reconstruction\ModelViewFromHomography.h" />
+    <ClInclude Include="Reconstruction\ReconstructionError.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
