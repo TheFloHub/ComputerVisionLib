@@ -1,7 +1,7 @@
 #include "ModelViewFromHomography.h"
 #include <ComputerVisionLib/Common/EigenHelpers.h>
 #include <ComputerVisionLib/Reconstruction/ReconstructionError.h>
-#include <unsupported/Eigen/LevenbergMarquardt>
+#include <ComputerVisionLib/Reconstruction/ModelViewOptimization.h>
 #include <iostream>
 
 Cvl::ModelViewFromHomography::ModelViewFromHomography()
@@ -13,7 +13,7 @@ Cvl::ModelViewFromHomography::~ModelViewFromHomography()
 }
 
 Eigen::Affine3d Cvl::ModelViewFromHomography::algebraic(
-	CameraModel const& cameraModel,
+	CameraModel const & cameraModel,
 	Eigen::Matrix3d const & homography)
 {
 	/** 
@@ -151,42 +151,7 @@ std::tuple<bool, double, Eigen::Affine3d> Cvl::ModelViewFromHomography::calculat
 	std::cout << "Initial RMSE of of modelview from homography: " << ReconstructionError::calculateRMSE(modelView, cameraModel, srcPoints, dstPoints) << std::endl;
 #endif
 
-	Functor functor(srcPoints, dstPoints, cameraModel);
-	Eigen::NumericalDiff<Functor> numDiff(functor);
-	Eigen::LevenbergMarquardt<Eigen::NumericalDiff<Functor>> lm(numDiff);
-	
-	Eigen::LevenbergMarquardtSpace::Status status = lm.minimize(parameters);
-
-	modelView = createModelView(parameters);
-	double error = std::sqrt(lm.fvec().squaredNorm() / lm.fvec().size());
-	bool success = lm.info() == Eigen::Success;
-
-#ifdef _DEBUG
-	std::cout << "Optimized parameters of modelview from homography: " << parameters.transpose() << std::endl;
-	std::cout << "Optimized RMSE of of modelview from homography: " << error << std::endl;
-	std::cout << "LM- info: " << lm.info() << " / status: " << status <<  " / iters: " << lm.iterations() << " / nfev: " << lm.nfev() << " / njev: " << lm.njev() << std::endl << std::endl;
-#endif
-
-	return std::make_tuple(success, error, modelView);
+	return ModelViewOptimization::optimize(cameraModel, modelView, srcPoints, dstPoints);
 }
 
-Cvl::ModelViewFromHomography::Functor::Functor(
-	Eigen::Array2Xd const & srcPoints,
-	Eigen::Array2Xd const & dstPoints,
-	CameraModel const & cameraModel) :
-mNumberOfInputs(6),
-mNumberOfValues((int)srcPoints.size()),
-mSrcPoints(srcPoints),
-mDstPoints(dstPoints),
-mCameraModel(cameraModel)
-{
-}
-
-int Cvl::ModelViewFromHomography::Functor::operator()(
-	Eigen::VectorXd const & x, 
-	Eigen::VectorXd & fvec) const
-{
-	fvec = ReconstructionError::calculateDiff(x, mCameraModel, mSrcPoints, mDstPoints);
-	return 0;
-}
 

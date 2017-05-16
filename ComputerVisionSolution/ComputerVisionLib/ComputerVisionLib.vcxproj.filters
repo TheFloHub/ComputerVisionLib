@@ -69,6 +69,9 @@
     <ClCompile Include="CameraModel\DistortionModel\DistortionModel.cpp">
       <Filter>CameraModel\DistortionModel</Filter>
     </ClCompile>
+    <ClCompile Include="Reconstruction\ModelViewOptimization.cpp">
+      <Filter>Reconstruction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Reconstruction\HomographyCalculation.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="CameraModel\DistortionModel\DistortionModel.h">
       <Filter>CameraModel\DistortionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Reconstruction\ModelViewOptimization.h">
+      <Filter>Reconstruction</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

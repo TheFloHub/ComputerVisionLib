@@ -133,6 +133,7 @@
     <ClCompile Include="ImageProcessing\Chessboard\ChessboardSegmentation.cpp" />
     <ClCompile Include="Reconstruction\HomographyCalculation.cpp" />
     <ClCompile Include="Reconstruction\ModelViewFromHomography.cpp" />
+    <ClCompile Include="Reconstruction\ModelViewOptimization.cpp" />
     <ClCompile Include="Reconstruction\ReconstructionError.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="ImageProcessing\Chessboard\ChessboardSegmentation.h" />
     <ClInclude Include="Reconstruction\HomographyCalculation.h" />
     <ClInclude Include="Reconstruction\ModelViewFromHomography.h" />
+    <ClInclude Include="Reconstruction\ModelViewOptimization.h" />
     <ClInclude Include="Reconstruction\ReconstructionError.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
