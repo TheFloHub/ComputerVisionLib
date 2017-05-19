@@ -39,7 +39,7 @@ namespace Cvl
 
 		virtual Eigen::Array2Xd project(Eigen::Array2Xd const& distortedPoints) const = 0;
 
-		virtual Eigen::Array2Xd unproject(Eigen::Array2Xd const& imagePoints) const = 0;
+		//virtual Eigen::Array2Xd unproject(Eigen::Array2Xd const& imagePoints) const = 0;
 
 		Eigen::Matrix3d getPinholeCameraMatrix() const;
 

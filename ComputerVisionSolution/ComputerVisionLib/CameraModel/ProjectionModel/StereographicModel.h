@@ -3,7 +3,7 @@
 /// 
 /// @date   02/2017
 /// 
-/// @class  PinholeModel
+/// @class  StereographicModel
 /// 
 ///	@brief  
 ///
@@ -14,18 +14,18 @@
 
 namespace Cvl
 {
-	class PinholeModel : public ProjectionModel
+	class StereographicModel : public ProjectionModel
 	{
 
 	public:
 
-		PinholeModel(
+		StereographicModel(
 			double focalLengthX,
 			double focalLengthY,
 			double principalPointX,
 			double principalPointY);
 
-		virtual ~PinholeModel() {}
+		virtual ~StereographicModel() {}
 
 		ProjectionModel::Uptr clone() const override;
 
@@ -39,7 +39,6 @@ namespace Cvl
 
 	};
 }
-
 
 
 

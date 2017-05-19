@@ -72,6 +72,21 @@
     <ClCompile Include="Reconstruction\ModelViewOptimization.cpp">
       <Filter>Reconstruction</Filter>
     </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\EquisolidModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\OrthographicModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraModel\ProjectionModel\StereographicModel.cpp">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibration\IntrinsicFishEyeCalibration.cpp">
+      <Filter>Calibration</Filter>
+    </ClCompile>
+    <ClCompile Include="Calibration\Circle.cpp">
+      <Filter>Calibration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Reconstruction\HomographyCalculation.h">
@@ -118,6 +133,21 @@
     </ClInclude>
     <ClInclude Include="Reconstruction\ModelViewOptimization.h">
       <Filter>Reconstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\EquisolidModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\OrthographicModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraModel\ProjectionModel\StereographicModel.h">
+      <Filter>CameraModel\ProjectionModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibration\IntrinsicFishEyeCalibration.h">
+      <Filter>Calibration</Filter>
+    </ClInclude>
+    <ClInclude Include="Calibration\Circle.h">
+      <Filter>Calibration</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

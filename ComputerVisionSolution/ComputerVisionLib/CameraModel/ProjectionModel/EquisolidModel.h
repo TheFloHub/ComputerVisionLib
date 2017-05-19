@@ -3,7 +3,7 @@
 /// 
 /// @date   02/2017
 /// 
-/// @class  PinholeModel
+/// @class  EquisolidModel
 /// 
 ///	@brief  
 ///
@@ -14,18 +14,18 @@
 
 namespace Cvl
 {
-	class PinholeModel : public ProjectionModel
+	class EquisolidModel : public ProjectionModel
 	{
 
 	public:
 
-		PinholeModel(
+		EquisolidModel(
 			double focalLengthX,
 			double focalLengthY,
 			double principalPointX,
 			double principalPointY);
 
-		virtual ~PinholeModel() {}
+		virtual ~EquisolidModel() {}
 
 		ProjectionModel::Uptr clone() const override;
 
@@ -39,7 +39,6 @@ namespace Cvl
 
 	};
 }
-
 
 
 

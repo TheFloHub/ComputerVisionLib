@@ -120,13 +120,18 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Calibration\Circle.cpp" />
     <ClCompile Include="Calibration\IntrinsicCameraCalibration.cpp" />
+    <ClCompile Include="Calibration\IntrinsicFishEyeCalibration.cpp" />
     <ClCompile Include="CameraModel\CameraModel.cpp" />
     <ClCompile Include="CameraModel\DistortionModel\BrownModel.cpp" />
     <ClCompile Include="CameraModel\DistortionModel\DistortionModel.cpp" />
     <ClCompile Include="CameraModel\ProjectionModel\EquidistantModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\EquisolidModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\OrthographicModel.cpp" />
     <ClCompile Include="CameraModel\ProjectionModel\PinholeModel.cpp" />
     <ClCompile Include="CameraModel\ProjectionModel\ProjectionModel.cpp" />
+    <ClCompile Include="CameraModel\ProjectionModel\StereographicModel.cpp" />
     <ClCompile Include="Common\EigenHelpers.cpp" />
     <ClCompile Include="Common\Match.cpp" />
     <ClCompile Include="ImageProcessing\Chessboard\ChessboardCornerDetector.cpp" />
@@ -137,13 +142,18 @@
     <ClCompile Include="Reconstruction\ReconstructionError.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calibration\Circle.h" />
     <ClInclude Include="Calibration\IntrinsicCameraCalibration.h" />
+    <ClInclude Include="Calibration\IntrinsicFishEyeCalibration.h" />
     <ClInclude Include="CameraModel\CameraModel.h" />
     <ClInclude Include="CameraModel\DistortionModel\BrownModel.h" />
     <ClInclude Include="CameraModel\DistortionModel\DistortionModel.h" />
     <ClInclude Include="CameraModel\ProjectionModel\EquidistantModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\EquisolidModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\OrthographicModel.h" />
     <ClInclude Include="CameraModel\ProjectionModel\PinholeModel.h" />
     <ClInclude Include="CameraModel\ProjectionModel\ProjectionModel.h" />
+    <ClInclude Include="CameraModel\ProjectionModel\StereographicModel.h" />
     <ClInclude Include="Common\EigenHelpers.h" />
     <ClInclude Include="Common\Match.h" />
     <ClInclude Include="ImageProcessing\Chessboard\ChessboardCornerDetector.h" />

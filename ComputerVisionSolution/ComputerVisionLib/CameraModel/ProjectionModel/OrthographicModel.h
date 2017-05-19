@@ -3,7 +3,7 @@
 /// 
 /// @date   02/2017
 /// 
-/// @class  PinholeModel
+/// @class  OrthographicModel
 /// 
 ///	@brief  
 ///
@@ -14,18 +14,18 @@
 
 namespace Cvl
 {
-	class PinholeModel : public ProjectionModel
+	class OrthographicModel : public ProjectionModel
 	{
 
 	public:
 
-		PinholeModel(
+		OrthographicModel(
 			double focalLengthX,
 			double focalLengthY,
 			double principalPointX,
 			double principalPointY);
 
-		virtual ~PinholeModel() {}
+		virtual ~OrthographicModel() {}
 
 		ProjectionModel::Uptr clone() const override;
 
@@ -39,7 +39,6 @@ namespace Cvl
 
 	};
 }
-
 
 
 
