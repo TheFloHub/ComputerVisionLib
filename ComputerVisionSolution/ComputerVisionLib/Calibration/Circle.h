@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <ComputerVisionLib/Common/EigenFunctorBase.h>
 #include <Eigen/Core>
 
 namespace Cvl
@@ -23,7 +24,11 @@ namespace Cvl
 
 		~Circle();
 
-		double getError() const { return mError; }
+		Eigen::Vector2d getCenter() const;
+
+		double getRadius() const;
+
+		double getError() const;
 
 		bool intersect(Circle const & other, Eigen::Vector2d & intersection1, Eigen::Vector2d & intersection2) const;
 
@@ -36,6 +41,16 @@ namespace Cvl
 		double mRadius;
 
 		double mError;
+
+		class Functor : public FunctorBase<double>
+		{
+		public:
+			Functor(Eigen::Array2Xd const & points);
+			int operator() (Eigen::VectorXd const & x, Eigen::VectorXd & fvec) const;
+			int df(Eigen::VectorXd const & x, Eigen::MatrixXd & fjac) const;
+		private:
+			Eigen::Array2Xd const & mPoints;
+		};
 
 	};
 }

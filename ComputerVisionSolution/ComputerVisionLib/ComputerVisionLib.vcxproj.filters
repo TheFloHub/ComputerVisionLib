@@ -149,5 +149,8 @@
     <ClInclude Include="Calibration\Circle.h">
       <Filter>Calibration</Filter>
     </ClInclude>
+    <ClInclude Include="Common\EigenFunctorBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

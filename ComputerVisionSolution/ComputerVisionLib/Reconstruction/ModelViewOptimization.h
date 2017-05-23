@@ -11,6 +11,7 @@
 #pragma once
 
 #include <ComputerVisionLib/CameraModel/CameraModel.h>
+#include <ComputerVisionLib/Common/EigenFunctorBase.h>
 #include <Eigen/Geometry>
 #include <tuple>
 
@@ -22,10 +23,6 @@ namespace Cvl
 
 	public:
 
-		ModelViewOptimization();
-
-		~ModelViewOptimization();
-
 		static std::tuple<bool, double, Eigen::Affine3d> optimize(
 			CameraModel const & cameraModel,
 			Eigen::Affine3d const & modelView,
@@ -34,32 +31,19 @@ namespace Cvl
 
 	private:
 
-		class Functor2d
+		ModelViewOptimization() = delete;
+
+		~ModelViewOptimization() = delete;
+
+		class Functor2d : public FunctorBase<double>
 		{
 		public:
-
-			typedef double Scalar;
-			enum {
-				InputsAtCompileTime = Eigen::Dynamic, // 6???
-				ValuesAtCompileTime = Eigen::Dynamic
-			};
-
-			typedef Eigen::Matrix<Scalar, InputsAtCompileTime, 1> InputType;
-			typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, 1> ValueType;
-			typedef Eigen::Matrix<Scalar, ValuesAtCompileTime, InputsAtCompileTime> JacobianType;
-			typedef Eigen::ColPivHouseholderQR<JacobianType> QRSolver;
-
 			Functor2d(
 				Eigen::Array2Xd const & srcPoints,
 				Eigen::Array2Xd const & dstPoints,
 				CameraModel const & cameraModel);
-
-			int inputs() const { return mNumberOfInputs; }
-			int values() const { return mNumberOfValues; }
 			int operator() (Eigen::VectorXd const & x, Eigen::VectorXd & fvec) const;
 		private:
-			int mNumberOfInputs;
-			int mNumberOfValues;
 			Eigen::Array2Xd const & mSrcPoints;
 			Eigen::Array2Xd const & mDstPoints;
 			CameraModel const & mCameraModel;

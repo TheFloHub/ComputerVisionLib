@@ -4,14 +4,6 @@
 #include <opencv2/highgui.hpp>
 #include <cmath>
 
-Cvl::ChessboardCornerDetector::ChessboardCornerDetector()
-{
-}
-
-Cvl::ChessboardCornerDetector::~ChessboardCornerDetector()
-{
-}
-
 Eigen::Array2Xd Cvl::ChessboardCornerDetector::findCorners(cv::Mat const & image, size_t const cornersPerRow, size_t const cornersPerCol, bool const highFidelity, size_t blockSize)
 {
 	std::vector< cv::Point2f > cvCorners;

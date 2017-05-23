@@ -154,6 +154,7 @@
     <ClInclude Include="CameraModel\ProjectionModel\PinholeModel.h" />
     <ClInclude Include="CameraModel\ProjectionModel\ProjectionModel.h" />
     <ClInclude Include="CameraModel\ProjectionModel\StereographicModel.h" />
+    <ClInclude Include="Common\EigenFunctorBase.h" />
     <ClInclude Include="Common\EigenHelpers.h" />
     <ClInclude Include="Common\Match.h" />
     <ClInclude Include="ImageProcessing\Chessboard\ChessboardCornerDetector.h" />

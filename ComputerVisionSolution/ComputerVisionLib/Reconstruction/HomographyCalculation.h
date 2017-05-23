@@ -23,10 +23,6 @@ namespace Cvl
 
 	public:
 
-		HomographyCalculation();
-
-		~HomographyCalculation();
-
 		static std::tuple<bool, Eigen::Matrix3d> calculate(
 			Eigen::Array2Xd const& srcPoints,
 			Eigen::Array2Xd const& dstPoints);
@@ -37,6 +33,10 @@ namespace Cvl
 			Eigen::Array2Xd const& dstPoints);
 
 	private:
+
+		HomographyCalculation() = delete;
+
+		~HomographyCalculation() = delete;
 
 	};
 }

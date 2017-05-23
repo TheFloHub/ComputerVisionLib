@@ -233,8 +233,7 @@ Cvl::IntrinsicCameraCalibration::Functor::Functor(
 	size_t numberOfIntrinsicParameters, 
 	std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> const & alignedPointsPerFrame, 
 	CameraModel & cameraModel) :
-mNumberOfInputs((int)(numberOfIntrinsicParameters + 6 * alignedPointsPerFrame.size())),
-mNumberOfValues(0),
+FunctorBase<double>((int)(numberOfIntrinsicParameters + 6 * alignedPointsPerFrame.size()), 0),
 mNumberOfIntrinsicParameters(numberOfIntrinsicParameters),
 mAlignedPointsPerFrame(alignedPointsPerFrame),
 mCameraModel(cameraModel)

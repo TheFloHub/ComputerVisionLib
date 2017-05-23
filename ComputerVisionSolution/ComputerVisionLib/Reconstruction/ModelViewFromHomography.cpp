@@ -4,14 +4,6 @@
 #include <ComputerVisionLib/Reconstruction/ModelViewOptimization.h>
 #include <iostream>
 
-Cvl::ModelViewFromHomography::ModelViewFromHomography()
-{
-}
-
-Cvl::ModelViewFromHomography::~ModelViewFromHomography()
-{
-}
-
 Eigen::Affine3d Cvl::ModelViewFromHomography::algebraic(
 	CameraModel const & cameraModel,
 	Eigen::Matrix3d const & homography)

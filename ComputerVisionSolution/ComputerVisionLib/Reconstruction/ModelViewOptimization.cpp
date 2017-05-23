@@ -4,14 +4,6 @@
 #include <unsupported/Eigen/LevenbergMarquardt>
 #include <iostream>
 
-Cvl::ModelViewOptimization::ModelViewOptimization()
-{
-}
-
-Cvl::ModelViewOptimization::~ModelViewOptimization()
-{
-}
-
 std::tuple<bool, double, Eigen::Affine3d> Cvl::ModelViewOptimization::optimize(
 	CameraModel const & cameraModel, 
 	Eigen::Affine3d const & modelView, 
@@ -43,8 +35,7 @@ Cvl::ModelViewOptimization::Functor2d::Functor2d(
 	Eigen::Array2Xd const & srcPoints, 
 	Eigen::Array2Xd const & dstPoints, 
 	CameraModel const & cameraModel) :
-mNumberOfInputs(6),
-mNumberOfValues((int)srcPoints.size()),
+FunctorBase<double>(6, (int)srcPoints.size()),
 mSrcPoints(srcPoints),
 mDstPoints(dstPoints),
 mCameraModel(cameraModel)

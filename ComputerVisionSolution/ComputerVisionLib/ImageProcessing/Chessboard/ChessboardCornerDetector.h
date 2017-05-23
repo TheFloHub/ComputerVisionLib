@@ -21,13 +21,13 @@ namespace Cvl
 
 	public:
 
-		ChessboardCornerDetector();
-
-		~ChessboardCornerDetector();
-
 		static Eigen::Array2Xd findCorners(cv::Mat const& image, size_t const cornersPerRow, size_t const cornersPerCol, bool const highFidelity, size_t blockSize = 0);
 
 	private:
+
+		ChessboardCornerDetector() = delete;
+
+		~ChessboardCornerDetector() = delete;
 
 		static Eigen::Array2Xd validateCorners(Eigen::Array2Xd const& corners, cv::Mat const& image, size_t const cornersPerRow, size_t const cornersPerCol, size_t blockSize);
 

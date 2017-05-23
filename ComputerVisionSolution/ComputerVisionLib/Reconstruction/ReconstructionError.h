@@ -22,10 +22,6 @@ namespace Cvl
 
 	public:
 
-		ReconstructionError();
-
-		~ReconstructionError();
-
 		static Eigen::VectorXd calculateDiff(
 			Eigen::Affine3d const& modelView,
 			CameraModel const& cameraModel,
@@ -45,6 +41,10 @@ namespace Cvl
 			Eigen::Array2Xd const& dstPoints);
 
 	private:
+
+		ReconstructionError() = delete;
+
+		~ReconstructionError() = delete;
 
 	};
 }

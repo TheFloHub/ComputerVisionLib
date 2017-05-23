@@ -1,14 +1,6 @@
 #include "ReconstructionError.h"
 #include <ComputerVisionLib/Common/EigenHelpers.h>
 
-Cvl::ReconstructionError::ReconstructionError()
-{
-}
-
-Cvl::ReconstructionError::~ReconstructionError()
-{
-}
-
 Eigen::VectorXd Cvl::ReconstructionError::calculateDiff(
 	Eigen::Affine3d const & modelView, 
 	CameraModel const & cameraModel, 

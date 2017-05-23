@@ -1,16 +1,7 @@
 #include "HomographyCalculation.h"
 #include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp>
-
 #include <iostream>
-
-Cvl::HomographyCalculation::HomographyCalculation()
-{
-}
-
-Cvl::HomographyCalculation::~HomographyCalculation()
-{
-}
 
 std::tuple<bool, Eigen::Matrix3d> Cvl::HomographyCalculation::calculate(
 	Eigen::Array2Xd const & srcPoints, 

@@ -35,10 +35,6 @@ namespace Cvl
 			std::vector<Match> mMatches;
 		};
 
-		ChessboardSegmentation();
-
-		~ChessboardSegmentation();
-
 		static Result match(
 			cv::Mat const& image, 
 			Eigen::Array2Xd const& corners, 
@@ -47,6 +43,10 @@ namespace Cvl
 			size_t blockSize = 0);
 
 	private:
+
+		ChessboardSegmentation() = delete;
+
+		~ChessboardSegmentation() = delete;
 
 		enum Direction { UP = 0, DOWN = 1, LEFT = 2, RIGHT = 3};
 

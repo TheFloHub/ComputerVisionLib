@@ -8,7 +8,7 @@ mpProjectionModel(std::move(pProjectionModel))
 }
 
 Cvl::CameraModel::CameraModel(CameraModel const & other) :
-mpDistortionModel(other.mpDistortionModel->clone()),
+mpDistortionModel(other.mpDistortionModel ? other.mpDistortionModel->clone() : nullptr),
 mpProjectionModel(other.mpProjectionModel->clone())
 {
 }
@@ -19,7 +19,7 @@ Cvl::CameraModel::~CameraModel()
 
 Eigen::Array2Xd Cvl::CameraModel::distortAndProject(Eigen::Array2Xd const & normalizedCameraPoints) const
 {
-	return mpProjectionModel->project(mpDistortionModel->distort(normalizedCameraPoints));
+	return mpProjectionModel->project(mpDistortionModel ? mpDistortionModel->distort(normalizedCameraPoints) : normalizedCameraPoints);
 }
 
 bool Cvl::CameraModel::isPinholeModel() const
@@ -44,13 +44,13 @@ Eigen::Vector4d Cvl::CameraModel::getProjectionParameters() const
 
 Eigen::VectorXd Cvl::CameraModel::getDistortionParameters() const
 {
-	return mpDistortionModel->getParameters();
+	return mpDistortionModel ? mpDistortionModel->getParameters() : Eigen::VectorXd();
 }
 
 Eigen::VectorXd Cvl::CameraModel::getAllParameters() const
 {
-	Eigen::VectorXd distortionParameters = mpDistortionModel->getParameters();
-	return (Eigen::VectorXd(4 + distortionParameters.rows()) << mpProjectionModel->getParameters(), distortionParameters).finished();
+	Eigen::VectorXd distortionParameters = mpDistortionModel ? mpDistortionModel->getParameters() : Eigen::VectorXd();
+	return (Eigen::VectorXd(4 + distortionParameters.size()) << mpProjectionModel->getParameters(), distortionParameters).finished();
 }
 
 void Cvl::CameraModel::setProjectionParameters(double focalLengthX, double focalLengthY, double principalPointX, double principalPointY)
@@ -65,25 +65,28 @@ void Cvl::CameraModel::setProjectionParameters(Eigen::Vector4d const & parameter
 
 void Cvl::CameraModel::setDistortionParameters(Eigen::VectorXd const & parameters)
 {
-	mpDistortionModel->setParameters(parameters);
+	if (mpDistortionModel)
+		mpDistortionModel->setParameters(parameters);
 }
 
 void Cvl::CameraModel::resetDistortionParameters()
 {
-	mpDistortionModel->resetParameters();
+	if (mpDistortionModel)
+		mpDistortionModel->resetParameters();
 }
 
 void Cvl::CameraModel::setAllParameters(Eigen::VectorXd const & parameters)
 {
 	mpProjectionModel->setParameters(parameters.head(4));
-	mpDistortionModel->setParameters(parameters.tail(parameters.rows() - 4));
+	if (mpDistortionModel)
+		mpDistortionModel->setParameters(parameters.tail(parameters.rows() - 4));
 }
 
 Cvl::CameraModel& Cvl::CameraModel::operator=(CameraModel const & other)
 {
 	if (this != &other)
 	{
-		mpDistortionModel = other.mpDistortionModel->clone();
+		mpDistortionModel = other.mpDistortionModel ? other.mpDistortionModel->clone() : nullptr;
 		mpProjectionModel = other.mpProjectionModel->clone();
 	}
 	return *this;

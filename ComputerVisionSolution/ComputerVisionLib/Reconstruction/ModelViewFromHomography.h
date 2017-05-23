@@ -22,10 +22,6 @@ namespace Cvl
 
 	public:
 
-		ModelViewFromHomography();
-
-		~ModelViewFromHomography();
-
 		static std::tuple<bool, double, Eigen::Affine3d> calculate(
 			CameraModel const & cameraModel,
 			Eigen::Matrix3d const & homography,
@@ -33,6 +29,10 @@ namespace Cvl
 			Eigen::Array2Xd const & dstPoints);
 
 	private:
+
+		ModelViewFromHomography() = delete;
+
+		~ModelViewFromHomography() = delete;
 
 		static Eigen::Affine3d algebraic(
 			CameraModel const & cameraModel,

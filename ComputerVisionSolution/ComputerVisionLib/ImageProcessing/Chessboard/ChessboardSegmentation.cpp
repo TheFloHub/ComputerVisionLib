@@ -9,14 +9,6 @@
 
 using namespace Eigen;
 
-Cvl::ChessboardSegmentation::ChessboardSegmentation()
-{
-}
-
-Cvl::ChessboardSegmentation::~ChessboardSegmentation()
-{
-}
-
 Cvl::ChessboardSegmentation::Result Cvl::ChessboardSegmentation::match(
 	cv::Mat const & image, 
 	Eigen::Array2Xd const& corners, 
