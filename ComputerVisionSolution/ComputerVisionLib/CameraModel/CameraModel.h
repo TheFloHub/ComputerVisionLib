@@ -33,6 +33,10 @@ namespace Cvl
 
 		Eigen::Array2Xd distortAndProject(Eigen::Array2Xd const& normalizedCameraPoints) const;
 
+		Eigen::Array2Xd unprojectAndUndistort(Eigen::Array2Xd const& imagePoints) const;
+		
+		Eigen::Array2Xd transformTo(CameraModel const& other, Eigen::Array2Xd const& imagePoints) const;
+
 		bool isPinholeModel() const;
 
 		Eigen::Matrix3d getPinholeCameraMatrix() const;

@@ -22,6 +22,18 @@ Eigen::Array2Xd Cvl::CameraModel::distortAndProject(Eigen::Array2Xd const & norm
 	return mpProjectionModel->project(mpDistortionModel ? mpDistortionModel->distort(normalizedCameraPoints) : normalizedCameraPoints);
 }
 
+Eigen::Array2Xd Cvl::CameraModel::unprojectAndUndistort(Eigen::Array2Xd const & imagePoints) const
+{
+	if (mpDistortionModel)
+		return mpDistortionModel->undistort(mpProjectionModel->unproject(imagePoints));
+	return mpProjectionModel->unproject(imagePoints);
+}
+
+Eigen::Array2Xd Cvl::CameraModel::transformTo(CameraModel const & other, Eigen::Array2Xd const & imagePoints) const
+{
+	return other.distortAndProject(this->unprojectAndUndistort(imagePoints));
+}
+
 bool Cvl::CameraModel::isPinholeModel() const
 {
 	return (dynamic_cast<Cvl::PinholeModel*>(mpProjectionModel.get()) != nullptr);

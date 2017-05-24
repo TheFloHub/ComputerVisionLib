@@ -31,7 +31,7 @@ namespace Cvl
 
 		Eigen::Array2Xd project(Eigen::Array2Xd const& distortedPoints) const override;
 
-		//Eigen::Array2Xd unproject(Eigen::Array2Xd const& imagePoints) const override;
+		Eigen::Array2Xd unproject(Eigen::Array2Xd const& imagePoints) const override;
 
 	private:
 

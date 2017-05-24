@@ -17,6 +17,12 @@ Eigen::Array2Xd Cvl::DistortionModel::distort(Eigen::Array2Xd const& normalizedC
 	return (normalizedCameraPoints.rowwise() * radialDistortionFactors(squaredNorms)) + tangentialDistortionOffsets(normalizedCameraPoints, squaredNorms);
 }
 
+Eigen::Array2Xd Cvl::DistortionModel::undistort(Eigen::Array2Xd const & distortedPoints) const
+{
+	// TODO: iterative undistortion
+	return Eigen::Array2Xd();
+}
+
 Eigen::VectorXd Cvl::DistortionModel::getParameters() const
 {
 	Eigen::VectorXd radialParameters = getRadialDistortionParameters();

@@ -30,6 +30,8 @@ namespace Cvl
 
 		Eigen::Array2Xd distort(Eigen::Array2Xd const& normalizedCameraPoints) const;
 
+		Eigen::Array2Xd undistort(Eigen::Array2Xd const& distortedPoints) const;
+
 		Eigen::VectorXd getParameters() const;
 
 		void setParameters(Eigen::VectorXd const& parameters);
