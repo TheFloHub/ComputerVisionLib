@@ -17,6 +17,11 @@ Eigen::Array<double, 1, Eigen::Dynamic> Cvl::BrownModel::radialDistortionFactors
 	return squaredNorms * mParameter1 + squaredNorms.square() * mParameter2 + 1.0;
 }
 
+double Cvl::BrownModel::radialDistortionDerivative(double r) const
+{
+	return (2.0 * mParameter1 + 4.0 * mParameter2 * r * r) * r;
+}
+
 Eigen::VectorXd Cvl::BrownModel::getRadialDistortionParameters() const
 {
 	return (Eigen::VectorXd(2) << mParameter1, mParameter2).finished();

@@ -29,6 +29,8 @@ namespace Cvl
 
 		Eigen::Array<double, 1, Eigen::Dynamic> radialDistortionFactors(Eigen::Array<double, 1, Eigen::Dynamic> const& squaredNorms) const override;
 
+		virtual double radialDistortionDerivative(double r) const override;
+
 		Eigen::VectorXd getRadialDistortionParameters() const override;
 
 		void setRadialDistortionParameters(Eigen::VectorXd const& parameters) override;
