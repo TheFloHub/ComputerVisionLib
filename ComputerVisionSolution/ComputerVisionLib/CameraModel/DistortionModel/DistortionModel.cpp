@@ -1,5 +1,10 @@
 #include "DistortionModel.h"
 #include <Eigen/Dense>
+#include <iostream>
+
+Cvl::DistortionModel::DistortionModel() : DistortionModel(0.0, 0.0)
+{
+}
 
 Cvl::DistortionModel::DistortionModel(double tangentialParameter1, double tangentialParameter2) :
 mTangentialParameter1(tangentialParameter1),
@@ -20,77 +25,59 @@ Eigen::Array2Xd Cvl::DistortionModel::distort(Eigen::Array2Xd const & normalized
 
 Eigen::Array2Xd Cvl::DistortionModel::undistort(Eigen::Array2Xd const & distortedPoints) const
 {
-	
+	// The first order Taylor approximation of the distortion function f(u)=d is
+	// 
+	// f(u) ~ f(u_0) + f'(u_0) * (u - u_0)
+	// 
+	// So we can undistort a point by iteratively distorting and updating a point u
+	// so that the difference d-f(u) between the distorted point d and f(u) is small enough.
+	//
+	// u_i+1 = f'^-1(u_i) * (d - f(u_i)) + u_i
+
 	static double const maxError = 0.0000001;
 	static size_t const maxNumberOfIterations = 100;
 
 	Eigen::Array2Xd undistortedPoints = Eigen::Array2Xd::Zero(2, distortedPoints.cols());
-	Eigen::Array<double, 1, Eigen::Dynamic> squaredNorms1D(1);
-	Eigen::Vector2d bi(0.0, 0.0);
-	Eigen::Vector2d aiPlus1(0.0, 0.0);
-	Eigen::Vector2d di(0.0, 0.0);
+	Eigen::Vector2d undistortedPoint(0.0, 0.0);
+	Eigen::Vector2d diff(0.0, 0.0);
 	Eigen::Matrix2d jacobian;
 	Eigen::Matrix2d inverseJacobian;
-	double radialFactor = 0.0;
 	double error = 0.0;
-	bool stopIteration = false;
 	size_t numberOfIterations = 0;
 
 	for (Eigen::Index pointIndex = 0; pointIndex < distortedPoints.cols(); ++pointIndex)
 	{
-
 		Eigen::Vector2d const & distortedPoint = distortedPoints.col(pointIndex).matrix();
-		bi = distortedPoint;
-		squaredNorms1D(0) = bi.squaredNorm();
-		radialFactor = radialDistortionFactors(squaredNorms1D)(0);
-		aiPlus1 = radialFactor * bi + tangentialDistortionOffsets(bi, squaredNorms1D).matrix();
-		di = aiPlus1 - distortedPoint;
-		error = di.norm();
-		stopIteration = error < maxError;
-
+		undistortedPoint = distortedPoint;
+		diff = distortedPoint - distort(undistortedPoint.array()).col(0).matrix();
+		error = diff.norm();
 		numberOfIterations = 0;
 
-		while (!stopIteration)
+		while (numberOfIterations < maxNumberOfIterations && error > maxError)
 		{
+			// calculate the next improved undistorted point
+			jacobian = derivative(undistortedPoint);
+			inverseJacobian = jacobian.inverse(); // TODO: computeInverseAndDetWithCheck?
+			undistortedPoint = inverseJacobian * diff + undistortedPoint;
+
+			// calculate the error
+			diff = distortedPoint - distort(undistortedPoint.array()).col(0).matrix();
+			error = diff.norm();
 			++numberOfIterations;
 
-			// step 1:
-			jacobian = derivative(bi, radialFactor);
-			inverseJacobian = jacobian.inverse(); // computeInverseAndDetWithCheck ???
-			bi = inverseJacobian*(distortedPoint - aiPlus1) + bi;
-
-			// step 2:
-			// calculate analytic function from b_(i+1)
-			squaredNorms1D(0) = bi.squaredNorm();
-			radialFactor = radialDistortionFactors(squaredNorms1D)(0);
-			aiPlus1 = radialFactor * bi + tangentialDistortionOffsets(bi, squaredNorms1D).matrix();
-			di = aiPlus1 - distortedPoint;
-			error = di.norm();
-
-			// step 3: check the norm of l_di
-			stopIteration = (numberOfIterations >= maxNumberOfIterations) || (error < maxError);
+			//std::cout << "Iter: " << numberOfIterations << " Error: " << error << std::endl;
 		}
+		undistortedPoints.col(pointIndex) = undistortedPoint.array();
 
-		//if (m_numIterations >= m_maxNumberOfIterations)
-		//{
-		//	if (m_logIterativeWarnings)
-		//	{
-		//		std::ostringstream l_warningSstream;
-		//		l_warningSstream << "iterative (un-)distortion reached max num iterations "
-		//			<< "for input radius r=" << fcr_in.norm() << " ("
-		//			<< atan2(fcr_in.norm(), 1.)*RAD2DEG << " degrees)"
-		//			<< "; remaining error: " << m_error;
-		//		logwarn << __FUNCTION__ << ": " << l_warningSstream.str() << endlog;
-		//		m_messageSignal(Vu::MESSAGE_WARN,
-		//			std::string("VipDistortionFunctions: ") + l_warningSstream.str());
-		//	}
+		//std::cout << std::endl << std::endl << std::endl;
 
-		//	fr_status |= vip::DISTORTION_STATUS_NO_CONVERGENCE;
-		//}
-
-		undistortedPoints.col(pointIndex) = bi.array();
+#ifdef _DEBUG
+		if (numberOfIterations >= maxNumberOfIterations)
+		{
+			std::cout << "Iterative undistortion reached maximum number of iterations with an error of " << error << "." << std::endl;
+		}
+#endif
 	}
-
 	return undistortedPoints;
 }
 
@@ -114,7 +101,7 @@ void Cvl::DistortionModel::resetParameters()
 	resetRadialDistortionParameters();
 }
 
-Eigen::Matrix2d Cvl::DistortionModel::derivative(Eigen::Array2d const & normalizedCameraPoint, double radialFactor) const
+Eigen::Matrix2d Cvl::DistortionModel::derivative(Eigen::Array2d const & normalizedCameraPoint) const
 {
 	// the jacobian of the tangential distortion is
 	// p1 * 2 * y  + p2 * 6 * x		p1 * 2 * x + p2 * 2 * y
@@ -127,22 +114,24 @@ Eigen::Matrix2d Cvl::DistortionModel::derivative(Eigen::Array2d const & normaliz
 	jacobi(1, 1) = 2.0 * mTangentialParameter2 * normalizedCameraPoint.x() + 6.0 * mTangentialParameter1 * normalizedCameraPoint.y();
 
 	// the jacobian of the radial distortion is
-	// ( (d/dx) x*g(r)  (d/dy) x*g(r) )  =
-	// ( (d/dx) y*g(r)  (d/dy) y*g(r) )
+	// ( (d/dx) x*f(r)  (d/dy) x*f(r) )  =
+	// ( (d/dx) y*f(r)  (d/dy) y*f(r) )
 	//
-	// g(r) * ( 1 0 )  +  ((d/dr) g(r)) * ( x*(dr/dx)  y*(dr/dy) )  =
+	// f(r) * ( 1 0 )  +  ((d/dr) f(r)) * ( x*(dr/dx)  y*(dr/dy) )  =
 	//        ( 0 1 )                     ( y*(dr/dx)  x*(dr/dy) )
 	//
-	// g(r) * ( 1 0 )  +  1/r * ((d/dr) g(r)) * ( x^2  x*y )    
+	// f(r) * ( 1 0 )  +  1/r * ((d/dr) f(r)) * ( x^2  x*y )    
 	//        ( 0 1 )                           ( x*y  y^2 )
 
-	double r = normalizedCameraPoint.matrix().norm();
+	double rSquared = normalizedCameraPoint.matrix().squaredNorm();
+	double r = std::sqrt(rSquared);
 	double dr = radialDistortionDerivative(r);
+	double fr = radialDistortionFactors((Eigen::Array<double, 1, Eigen::Dynamic>(1, 1) << rSquared).finished())(0);
 
-	jacobi(0, 0) += radialFactor + dr * (normalizedCameraPoint.x() * normalizedCameraPoint.x()) / r;
+	jacobi(0, 0) += fr + dr * (normalizedCameraPoint.x() * normalizedCameraPoint.x()) / r;
 	jacobi(1, 0) +=				   dr * (normalizedCameraPoint.x() * normalizedCameraPoint.y()) / r;
 	jacobi(0, 1) +=				   dr * (normalizedCameraPoint.x() * normalizedCameraPoint.y()) / r;
-	jacobi(1, 1) += radialFactor + dr * (normalizedCameraPoint.y() * normalizedCameraPoint.y()) / r;
+	jacobi(1, 1) += fr + dr * (normalizedCameraPoint.y() * normalizedCameraPoint.y()) / r;
 
 	return jacobi;
 }

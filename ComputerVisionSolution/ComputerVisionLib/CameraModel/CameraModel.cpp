@@ -7,6 +7,12 @@ mpProjectionModel(std::move(pProjectionModel))
 {
 }
 
+Cvl::CameraModel::CameraModel(ProjectionModel::Uptr pProjectionModel) :
+mpDistortionModel(nullptr),
+mpProjectionModel(std::move(pProjectionModel))
+{
+}
+
 Cvl::CameraModel::CameraModel(CameraModel const & other) :
 mpDistortionModel(other.mpDistortionModel ? other.mpDistortionModel->clone() : nullptr),
 mpProjectionModel(other.mpProjectionModel->clone())
@@ -32,6 +38,13 @@ Eigen::Array2Xd Cvl::CameraModel::unprojectAndUndistort(Eigen::Array2Xd const & 
 Eigen::Array2Xd Cvl::CameraModel::transformTo(CameraModel const & other, Eigen::Array2Xd const & imagePoints) const
 {
 	return other.distortAndProject(this->unprojectAndUndistort(imagePoints));
+}
+
+Eigen::Array2Xd Cvl::CameraModel::transformToPinhole(Eigen::Array2Xd const & imagePoints) const
+{
+	Eigen::Vector4d projectionParameters = this->getProjectionParameters();
+	CameraModel pinholeModel = CameraModel::create<PinholeModel>(projectionParameters(0), projectionParameters(1), projectionParameters(2), projectionParameters(3));
+	return this->transformTo(pinholeModel, imagePoints);
 }
 
 bool Cvl::CameraModel::isPinholeModel() const

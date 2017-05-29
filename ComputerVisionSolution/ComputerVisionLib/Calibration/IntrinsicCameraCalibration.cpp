@@ -1,4 +1,5 @@
 #include "IntrinsicCameraCalibration.h"
+#include <ComputerVisionLib/Calibration/IntrinsicFishEyeCalibration.h>
 #include <ComputerVisionLib/Reconstruction/HomographyCalculation.h>
 #include <ComputerVisionLib/Reconstruction/ModelViewFromHomography.h>
 #include <ComputerVisionLib/Reconstruction/ReconstructionError.h>
@@ -20,20 +21,20 @@ Cvl::IntrinsicCameraCalibration::~IntrinsicCameraCalibration()
 std::tuple<bool, double> Cvl::IntrinsicCameraCalibration::calibrate(
 	Eigen::Array2Xd const & templatePoints,
 	std::vector<Eigen::Array2Xd> const & imagePointsPerFrame,
-	std::vector<std::vector<Match>> const & mMatchesPerFrame,
+	std::vector<std::vector<Match>> const & matchesPerFrame,
 	CameraModel & cameraModel)
 {
 	cameraModel.setProjectionParameters(0.0, 0.0, 0.0, 0.0);
 	cameraModel.resetDistortionParameters();
 
 	if (imagePointsPerFrame.size() < 3 ||
-		imagePointsPerFrame.size() != mMatchesPerFrame.size() ||
+		imagePointsPerFrame.size() != matchesPerFrame.size() ||
 		templatePoints.size() < 4)
 	{
 		return std::make_tuple(false, std::numeric_limits<double>::max());
 	}
 
-	std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> alignedPointsPerFrame = alignPoints(templatePoints, imagePointsPerFrame, mMatchesPerFrame);
+	std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> alignedPointsPerFrame = alignPoints(templatePoints, imagePointsPerFrame, matchesPerFrame);
 	std::vector<Eigen::Matrix3d> homographies;
 
 	// initialize the camera matrix
@@ -47,9 +48,19 @@ std::tuple<bool, double> Cvl::IntrinsicCameraCalibration::calibrate(
 	}
 	else 
 	{
-		// TODO: init with other method
-		// transform all points to pinhole model
-		// calc homographies
+		if (!IntrinsicFishEyeCalibration::calibrate(templatePoints, imagePointsPerFrame, matchesPerFrame, cameraModel))
+		{
+			return std::make_tuple(false, std::numeric_limits<double>::max());
+		}
+
+		std::vector<Eigen::Array2Xd> pinholePointsPerFrame;
+		pinholePointsPerFrame.reserve(imagePointsPerFrame.size());
+		for (Eigen::Array2Xd const & imagePoints : imagePointsPerFrame)
+		{
+			pinholePointsPerFrame.push_back(cameraModel.transformToPinhole(imagePoints));
+		}
+		std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> alignedPinholePointsPerFrame = alignPoints(templatePoints, pinholePointsPerFrame, matchesPerFrame);
+		homographies = calculateHomographies2(alignedPinholePointsPerFrame, alignedPointsPerFrame);
 	}
 
 	std::vector<Eigen::Affine3d> modelViews;
@@ -110,6 +121,35 @@ std::vector<Eigen::Matrix3d> Cvl::IntrinsicCameraCalibration::calculateHomograph
 		}
 		else
 		{
+			pointsPerFrameIter = alignedPointsPerFrame.erase(pointsPerFrameIter);
+		}
+	}
+	return homographies;
+}
+
+std::vector<Eigen::Matrix3d> Cvl::IntrinsicCameraCalibration::calculateHomographies2(
+	std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>>& alignedPinholePointsPerFrame, 
+	std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>>& alignedPointsPerFrame)
+{
+	std::vector<Eigen::Matrix3d> homographies;
+	homographies.reserve(alignedPinholePointsPerFrame.size());
+
+	bool success = false;
+	Eigen::Matrix3d h = Eigen::Matrix3d::Zero();
+	auto pinholePointsPerFrameIter = std::begin(alignedPinholePointsPerFrame);
+	auto pointsPerFrameIter = std::begin(alignedPointsPerFrame);
+	while (pinholePointsPerFrameIter != std::end(alignedPinholePointsPerFrame))
+	{
+		std::tie(success, h) = HomographyCalculation::calculate(std::get<0>(*pinholePointsPerFrameIter), std::get<1>(*pinholePointsPerFrameIter));
+		if (success)
+		{
+			homographies.push_back(h);
+			++pinholePointsPerFrameIter;
+			++pointsPerFrameIter;
+		}
+		else
+		{
+			pinholePointsPerFrameIter = alignedPinholePointsPerFrame.erase(pinholePointsPerFrameIter);
 			pointsPerFrameIter = alignedPointsPerFrame.erase(pointsPerFrameIter);
 		}
 	}

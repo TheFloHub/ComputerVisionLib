@@ -58,9 +58,10 @@ namespace Cvl
 		class Functor : public FunctorBase<double>
 		{
 		public:
-			Functor(Eigen::Array2Xd const & points);
+			Functor(CameraModel & cameraModel, Eigen::Array2Xd const & points);
 			int operator() (Eigen::VectorXd const & x, Eigen::VectorXd & fvec) const;
 		private:
+			CameraModel & mCameraModel;
 			Eigen::Array2Xd const & mPoints;
 		};
 

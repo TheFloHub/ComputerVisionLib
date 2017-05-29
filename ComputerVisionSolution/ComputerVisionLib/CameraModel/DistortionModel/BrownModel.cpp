@@ -1,5 +1,9 @@
 #include "BrownModel.h"
 
+Cvl::BrownModel::BrownModel() : BrownModel(0.0, 0.0, 0.0, 0.0)
+{
+}
+
 Cvl::BrownModel::BrownModel(double radialParameter1, double radialParameter2, double tangentialParameter1, double tangentialParameter2) :
 DistortionModel(tangentialParameter1, tangentialParameter2),
 mParameter1(radialParameter1),

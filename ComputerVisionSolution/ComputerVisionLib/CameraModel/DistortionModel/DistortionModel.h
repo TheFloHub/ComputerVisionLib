@@ -22,6 +22,8 @@ namespace Cvl
 
 		using Uptr = std::unique_ptr<DistortionModel>;
 
+		DistortionModel();
+
 		DistortionModel(double tangentialParameter1, double tangentialParameter2);
 
 		virtual ~DistortionModel();
@@ -40,7 +42,7 @@ namespace Cvl
 
 	protected:
 
-		Eigen::Matrix2d derivative(Eigen::Array2d const & normalizedCameraPoint, double radialFactor) const;
+		Eigen::Matrix2d derivative(Eigen::Array2d const & normalizedCameraPoint) const;
 
 		virtual Eigen::Array<double, 1, Eigen::Dynamic> radialDistortionFactors(Eigen::Array<double, 1, Eigen::Dynamic> const & squaredNorms) const = 0;
 

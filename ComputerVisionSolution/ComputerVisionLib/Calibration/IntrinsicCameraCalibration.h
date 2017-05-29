@@ -46,6 +46,10 @@ namespace Cvl
 		static std::vector<Eigen::Matrix3d> calculateHomographies(
 			std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> & alignedPointsPerFrame);
 
+		static std::vector<Eigen::Matrix3d> calculateHomographies2(
+			std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> & alignedPinholePointsPerFrame,
+			std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> & alignedPointsPerFrame);
+
 		static bool initializeWithHomographies(
 			std::vector<Eigen::Matrix3d> const& homographies,
 			CameraModel & cameraModel);

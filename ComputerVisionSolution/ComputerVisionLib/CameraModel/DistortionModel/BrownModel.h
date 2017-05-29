@@ -19,6 +19,8 @@ namespace Cvl
 
 	public:
 
+		BrownModel();
+		
 		BrownModel(double radialParameter1, double radialParameter2, double tangentialParameter1, double tangentialParameter2);
 
 		virtual ~BrownModel() {}

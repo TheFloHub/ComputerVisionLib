@@ -52,7 +52,7 @@ bool Cvl::IntrinsicFishEyeCalibration::calibrate(
 	avgPrincipalPoint /= (double)numValidFrames;
 
 	// optimize principal point and focal length over all frames
-	Functor functor(allCirclePoints);
+	Functor functor(cameraModel, allCirclePoints);
 	Eigen::VectorXd parameters(3);
 	parameters(0) = avgFocalLength;
 	parameters(1) = avgPrincipalPoint.x();
@@ -188,7 +188,7 @@ std::tuple<bool, Eigen::Array2Xd> Cvl::IntrinsicFishEyeCalibration::calculateInt
 	double stepWidth = (upperBound - lowerBound) / numSamples;
 	Eigen::Array2Xd circlePointsArray = vectorToEigen(circlePoints);
 
-	Functor functor(circlePointsArray);
+	Functor functor(cameraModel, circlePointsArray);
 	Eigen::VectorXd x(3);
 	x(1) = principalPoint.x();
 	x(2) = principalPoint.y();
@@ -338,13 +338,25 @@ Eigen::Array2Xd Cvl::IntrinsicFishEyeCalibration::vectorToEigen(std::vector<Eige
 	return eigenArray;
 }
 
-Cvl::IntrinsicFishEyeCalibration::Functor::Functor(Eigen::Array2Xd const & points) :
+Cvl::IntrinsicFishEyeCalibration::Functor::Functor(CameraModel & cameraModel, Eigen::Array2Xd const & points) :
 FunctorBase<double>(3, (int)points.cols()/3),
+mCameraModel(cameraModel),
 mPoints(points)
 {
 }
 
 int Cvl::IntrinsicFishEyeCalibration::Functor::operator() (Eigen::VectorXd const & x, Eigen::VectorXd & fvec) const
 {
+	mCameraModel.setProjectionParameters(x(0), x(0), x(1), x(2));
+	Eigen::Array2Xd pinholePoints = mCameraModel.transformToPinhole(mPoints);
+	Eigen::Matrix3d matrix;
+
+	for (Eigen::Index i = 0; i < pinholePoints.cols(); i += 3)
+	{
+		matrix.col(0) = pinholePoints.col(i  ).matrix().homogeneous();
+		matrix.col(1) = pinholePoints.col(i+1).matrix().homogeneous();
+		matrix.col(2) = pinholePoints.col(i+2).matrix().homogeneous();
+		fvec(i) = std::abs(matrix.determinant())/2.0;
+	}
 	return 0;
 }
