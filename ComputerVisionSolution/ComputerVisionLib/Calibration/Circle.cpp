@@ -2,6 +2,7 @@
 #include <unsupported/Eigen/LevenbergMarquardt>
 #include <limits>
 #include <iostream>
+//#define DEBUG_CIRCLE
 
 Cvl::Circle::Circle(Eigen::Array2Xd const & points, size_t index1, size_t index2, size_t index3) :
 mCenterX(0.0),
@@ -45,7 +46,7 @@ mError(std::numeric_limits<double>::max())
 	{
 		Eigen::VectorXd parameters = Eigen::Vector3d(mCenterX, mCenterY, mRadius);
 
-#ifdef _DEBUG
+#ifdef DEBUG_CIRCLE
 		Eigen::VectorXd errorVec = ((points.matrix().colwise() - parameters.head<2>()).colwise().norm().array() - parameters(2)).matrix().transpose();
 		mError = std::sqrt(errorVec.squaredNorm() / errorVec.size());
 		std::cout << "Initial circle parameters: " << std::endl;
@@ -66,7 +67,7 @@ mError(std::numeric_limits<double>::max())
 			mError = std::sqrt(lm.fvec().squaredNorm() / lm.fvec().size());
 		}
 
-#ifdef _DEBUG
+#ifdef DEBUG_CIRCLE
 		std::cout << "Optimized circle parameters: " << std::endl;
 		std::cout << parameters << std::endl;
 		std::cout << "Optimized RMSE of circle: " << mError << std::endl;

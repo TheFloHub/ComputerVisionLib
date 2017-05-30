@@ -42,6 +42,9 @@ bool Cvl::IntrinsicFishEyeCalibration::calibrate(
 			avgPrincipalPoint += frameParameters.tail<2>();
 			allCirclePoints.conservativeResize(2, allCirclePoints.cols() + frameCirclePoints.cols());
 			allCirclePoints.rightCols(frameCirclePoints.cols()) = frameCirclePoints;
+#ifdef _DEBUG
+			std::cout << "FishEyeCalibration Frame " << frameIndex << ": " << frameParameters.transpose() << std::endl;
+#endif
 		}
 	}
 
@@ -50,6 +53,9 @@ bool Cvl::IntrinsicFishEyeCalibration::calibrate(
 
 	avgFocalLength /= (double) numValidFrames;
 	avgPrincipalPoint /= (double)numValidFrames;
+#ifdef _DEBUG
+	std::cout << "FishEyeCalibration average: " << avgFocalLength << " " << avgPrincipalPoint.transpose() << std::endl;
+#endif
 
 	// optimize principal point and focal length over all frames
 	Functor functor(cameraModel, allCirclePoints);
@@ -66,9 +72,8 @@ bool Cvl::IntrinsicFishEyeCalibration::calibrate(
 
 #ifdef _DEBUG
 	double error = std::sqrt(lm.fvec().squaredNorm() / lm.fvec().size());
-	std::cout << "Optimized parameters of fisheye calibration: " << std::endl;
-	std::cout << parameters.transpose() << std::endl;
-	std::cout << "Optimized RMSE of fisheye calibration: " << error << std::endl;
+	std::cout << "FishEyeCalibration optimized parameters: " << parameters.transpose() << std::endl;
+	std::cout << "FishEyeCalibration optimized RMSE: " << error << std::endl;
 	std::cout << "LM- info: " << lm.info() << " / status: " << status << " / iters: " << lm.iterations() << " / nfev: " << lm.nfev() << " / njev: " << lm.njev() << std::endl << std::endl;
 #endif
 
@@ -182,7 +187,7 @@ std::tuple<bool, Eigen::Array2Xd> Cvl::IntrinsicFishEyeCalibration::calculateInt
 	Eigen::Vector2d principalPoint = line1.cross(line2).hnormalized();
 
 	// calculate the focal length
-	double lowerBound = -1000;
+	double lowerBound = -1500;
 	double upperBound = -150;
 	int numSamples = 1000;
 	double stepWidth = (upperBound - lowerBound) / numSamples;
@@ -351,12 +356,14 @@ int Cvl::IntrinsicFishEyeCalibration::Functor::operator() (Eigen::VectorXd const
 	Eigen::Array2Xd pinholePoints = mCameraModel.transformToPinhole(mPoints);
 	Eigen::Matrix3d matrix;
 
-	for (Eigen::Index i = 0; i < pinholePoints.cols(); i += 3)
+	Eigen::Index i = 0;
+	Eigen::Index j = 0;
+	for (; i < pinholePoints.cols(); i += 3, ++j)
 	{
 		matrix.col(0) = pinholePoints.col(i  ).matrix().homogeneous();
 		matrix.col(1) = pinholePoints.col(i+1).matrix().homogeneous();
 		matrix.col(2) = pinholePoints.col(i+2).matrix().homogeneous();
-		fvec(i) = std::abs(matrix.determinant())/2.0;
+		fvec(j) = std::abs(matrix.determinant())/2.0;
 	}
 	return 0;
 }

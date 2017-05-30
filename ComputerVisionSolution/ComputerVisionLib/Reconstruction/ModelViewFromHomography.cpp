@@ -139,8 +139,9 @@ std::tuple<bool, double, Eigen::Affine3d> Cvl::ModelViewFromHomography::calculat
 	Eigen::VectorXd parameters = getModelViewParameters(modelView);
 
 #ifdef _DEBUG
-	std::cout << "Initial parameters of modelview from homography: " << parameters.transpose() << std::endl;
-	std::cout << "Initial RMSE of of modelview from homography: " << ReconstructionError::calculateRMSE(modelView, cameraModel, srcPoints, dstPoints) << std::endl;
+	std::cout << "ModelViewFromHomography initial parameters: " << std::endl;
+	std::cout << parameters.transpose() << std::endl;
+	std::cout << "ModelViewFromHomography initial RMSE: " << ReconstructionError::calculateRMSE(modelView, cameraModel, srcPoints, dstPoints) << std::endl;
 #endif
 
 	return ModelViewOptimization::optimize(cameraModel, modelView, srcPoints, dstPoints);
