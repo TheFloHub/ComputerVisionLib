@@ -26,10 +26,6 @@ namespace Cvl
 
 	public:
 
-		IntrinsicFishEyeCalibration() = delete;
-
-		~IntrinsicFishEyeCalibration() = delete;
-
 		static bool calibrate(
 			Eigen::Array2Xd const& templatePoints,
 			std::vector<Eigen::Array2Xd> const & imagePointsPerFrame,
@@ -37,6 +33,10 @@ namespace Cvl
 			CameraModel & cameraModel);
 
 	private:
+
+		IntrinsicFishEyeCalibration() = delete;
+
+		~IntrinsicFishEyeCalibration() = delete;
 
 		/// @brief calculates an initial estimation of the focal length and
 		/// principal point from the collected data of one frame.

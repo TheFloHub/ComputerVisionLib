@@ -26,10 +26,6 @@ namespace Cvl
 
 	public:
 
-		IntrinsicCameraCalibration();
-
-		~IntrinsicCameraCalibration();
-
 		static std::tuple<bool, double> calibrate(
 			Eigen::Array2Xd const& templatePoints,
 			std::vector<Eigen::Array2Xd> const & imagePointsPerFrame,
@@ -37,6 +33,10 @@ namespace Cvl
 			CameraModel & cameraModel);
 
 	private:
+
+		IntrinsicCameraCalibration() = delete;
+
+		~IntrinsicCameraCalibration() = delete;
 
 		static std::vector<std::tuple<Eigen::Array2Xd, Eigen::Array2Xd>> alignPoints(
 			Eigen::Array2Xd const& templatePoints,
