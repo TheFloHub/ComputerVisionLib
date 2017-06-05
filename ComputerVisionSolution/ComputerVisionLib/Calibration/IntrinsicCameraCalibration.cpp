@@ -10,14 +10,6 @@
 #include <chrono>
 #include <limits>
 
-Cvl::IntrinsicCameraCalibration::IntrinsicCameraCalibration()
-{
-}
-
-Cvl::IntrinsicCameraCalibration::~IntrinsicCameraCalibration()
-{
-}
-
 std::tuple<bool, double> Cvl::IntrinsicCameraCalibration::calibrate(
 	Eigen::Array2Xd const & templatePoints,
 	std::vector<Eigen::Array2Xd> const & imagePointsPerFrame,

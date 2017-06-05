@@ -1,11 +1,7 @@
 #include "ReconstructionError.h"
 #include <ComputerVisionLib/Common/EigenHelpers.h>
 
-Eigen::VectorXd Cvl::ReconstructionError::calculateDiff(
-	Eigen::Affine3d const & modelView, 
-	CameraModel const & cameraModel, 
-	Eigen::Array2Xd const & srcPoints, 
-	Eigen::Array2Xd const & dstPoints)
+Eigen::Array2Xd Cvl::ReconstructionError::project(Eigen::Affine3d const & modelView, CameraModel const & cameraModel, Eigen::Array2Xd const & srcPoints)
 {
 	// Since we have only 2d template points points with with z=0,
 	// we can skip the z rotation axis here.
@@ -16,8 +12,17 @@ Eigen::VectorXd Cvl::ReconstructionError::calculateDiff(
 
 	// transformation to normalized camera coordinates
 	Eigen::Array2Xd normalizedCameraPoints = (planarModelView * srcPoints.matrix().colwise().homogeneous()).colwise().hnormalized();
+	return cameraModel.distortAndProject(normalizedCameraPoints);
+}
+
+Eigen::VectorXd Cvl::ReconstructionError::calculateDiff(
+	Eigen::Affine3d const & modelView, 
+	CameraModel const & cameraModel, 
+	Eigen::Array2Xd const & srcPoints, 
+	Eigen::Array2Xd const & dstPoints)
+{
 	// camera projection to image coordinates
-	Eigen::Array2Xd estimatedPoints = cameraModel.distortAndProject(normalizedCameraPoints);
+	Eigen::Array2Xd estimatedPoints = project(modelView, cameraModel, srcPoints);
 	// difference of estimated and measured points
 	Eigen::Array2Xd diff = estimatedPoints - dstPoints;
 	Eigen::Map<Eigen::VectorXd> diffMap(diff.data(), diff.size());

@@ -22,6 +22,11 @@ namespace Cvl
 
 	public:
 
+		static Eigen::Array2Xd project(
+			Eigen::Affine3d const& modelView,
+			CameraModel const& cameraModel,
+			Eigen::Array2Xd const& srcPoints);
+
 		static Eigen::VectorXd calculateDiff(
 			Eigen::Affine3d const& modelView,
 			CameraModel const& cameraModel,
